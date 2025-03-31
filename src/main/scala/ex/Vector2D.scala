@@ -24,8 +24,15 @@ trait Vector2D:
   def magnitude: Double
 
 object Vector2D:
+  private case class Vector2DImpl(x: Double, y: Double) extends Vector2D:
+    override def +(other: Vector2D): Vector2D = Vector2D(x + other.x, y + other.y)
+    override def -(other: Vector2D): Vector2D = Vector2D(x - other.x, y - other.y)
+    override def *(scalar: Double): Vector2D = Vector2D(x * scalar, y * scalar)
+    override def dot(other: Vector2D): Double = (x * other.x) + (y * other.y)
+    override def magnitude: Double = sqrt((x * x) + (y * y))
+
   // Factory method to create Vector2D instances
-  def apply(x: Double, y: Double): Vector2D = ???
+  def apply(x: Double, y: Double): Vector2D = Vector2DImpl(x, y)
 
   // Common vectors (optional but nice)
   val zero: Vector2D = apply(0.0, 0.0)
@@ -69,8 +76,8 @@ object Vector2D:
   println(s"Magnitude of v2: $magV2") // Check if close to 2.236
 
   // Check zero vector and unit vectors if implemented in companion object
-  // println(s"Zero vector: ${Vector2D.zero}")
-  // println(s"Dot product v1.dot(Vector2D.i): ${v1.dot(Vector2D.i)}") // Should be v1.x = 3.0
+  println(s"Zero vector: ${Vector2D.zero}")
+  println(s"Dot product v1.dot(Vector2D.i): ${v1.dot(Vector2D.i)}") // Should be v1.x = 3.0
 
   val multipleOps = (v1 + v2) * 3.0 - Vector2D(1.0, 1.0)
   // sum = (2.0, 6.0)
