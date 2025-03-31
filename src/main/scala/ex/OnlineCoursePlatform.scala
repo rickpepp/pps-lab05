@@ -92,11 +92,11 @@ object OnlineCoursePlatform:
     private var courses: Sequence[Course] = Sequence.empty
     private var students: Sequence[(String, String)] = Sequence.empty
     override def addCourse(course: Course): Unit =
-      courses = courses.concat(Sequence.Cons(course, Sequence.Nil()))
+      courses = courses.add(course)
     override def getCourse(courseId: String): Optional[Course] =
       courses.find(_.courseId == courseId)
     override def enrollStudent(studentId: String, courseId: String): Unit =
-      students = students.concat(Sequence.Cons((studentId, courseId), Sequence.Nil()))
+      students = students.add((studentId, courseId))
     override def findCoursesByCategory(category: String): Sequence[Course] =
       courses.filter(_.category == category)
     override def isStudentEnrolled(studentId: String, courseId: String): Boolean =
@@ -104,7 +104,10 @@ object OnlineCoursePlatform:
     override def unenrollStudent(studentId: String, courseId: String): Unit =
       students = students.filter(_ != (studentId, courseId))
     override def getStudentEnrollments(studentId: String): Sequence[Course] =
-      students.filter((id, _) => id == studentId).map((_, courseId) => getCourse(courseId).orElse(Course("","","","")))
+      courses.filter(p => students
+        .filter((id, _) => id == studentId)
+        .map((_, courseID) => courseID)
+        .contains(p.courseId))
     override def isCourseAvailable(courseId: String): Boolean =
       !getCourse(courseId).isEmpty
     override def removeCourse(course: Course): Unit =

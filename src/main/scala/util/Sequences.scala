@@ -23,6 +23,8 @@ object Sequences: // Essentially, generic linkedlists
     def empty[A]: Sequence[A] = Nil()
 
     extension [A](sequence: Sequence[A])
+      def add(newElement: A): Sequence[A] = Cons(newElement, sequence)
+
       def head: Optional[A] = sequence match
         case Cons(h, _) => Just(h)
         case _ => Empty()
